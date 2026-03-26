@@ -28,4 +28,9 @@ async function bootstrap() {
     process.exit(1);
   }
 }
+<<<<<<< HEAD
 bootstrap();
+=======
+bootstrap();
+
+>>>>>>> 575955a (backend v2.2)

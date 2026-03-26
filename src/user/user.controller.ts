@@ -8,16 +8,21 @@ import {
   Req,
   Param,
   UseGuards,
+<<<<<<< HEAD
   UseInterceptors,
   UploadedFiles,
   BadRequestException,
   NotFoundException, // Added this
 } from '@nestjs/common';
 import { SubscriptionTier } from '@prisma/client';
+=======
+} from '@nestjs/common';
+>>>>>>> 575955a (backend v2.2)
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
+<<<<<<< HEAD
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../core/cloudinary/cloudinary.service';
 import { PrismaService } from '../core/prisma/prisma.service'; // Ensure this path is correct
@@ -25,6 +30,11 @@ import { GeminiService } from 'src/core/ai/gemini.service';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
+=======
+
+@Controller('users')
+@UseGuards(JwtAuthGuard)
+>>>>>>> 575955a (backend v2.2)
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -38,12 +48,47 @@ export class UserController {
     return req.user;
   }
 
+<<<<<<< HEAD
+=======
+  @Post('sync-me')
+  async syncMe(@Req() req: any) {
+    const { sub, email, preferred_username } = req.user;
+
+    return this.userService.upsertFromKeycloak({
+      keycloakId: sub,
+      email,
+      username: preferred_username ?? email,
+    });
+  }
+
+  @Get('test')
+  test(@Req() req: any) {
+    return req.user;
+  }
+
+  @Get('me')
+  async getMe(@Req() req: any) {
+    return this.userService.getMeByKeycloakId(req.user?.sub);
+  }
+
+  @Patch('subscription')
+  async updateMySubscription(@Req() req: any, @Body('tier') tier: string) {
+    const keycloakId = req.user?.sub;
+    return this.userService.updateSubscriptionByKeycloakId(keycloakId, tier);
+  }
+
+  @UseGuards(RolesGuard)
+>>>>>>> 575955a (backend v2.2)
   @Get('all')
   @Roles('admin')
   async findAll() {
     return this.userService.findAll();
   }
 
+<<<<<<< HEAD
+=======
+  @UseGuards(RolesGuard)
+>>>>>>> 575955a (backend v2.2)
   @Post('add')
   @Roles('admin')
   async create(
@@ -53,18 +98,30 @@ export class UserController {
     return this.userService.create(email, role);
   }
 
+<<<<<<< HEAD
+=======
+  @UseGuards(RolesGuard)
+>>>>>>> 575955a (backend v2.2)
   @Get(':id')
   @Roles('admin')
   async findById(@Param('id') id: string) {
     return this.userService.findById(id);
   }
 
+<<<<<<< HEAD
+=======
+  @UseGuards(RolesGuard)
+>>>>>>> 575955a (backend v2.2)
   @Delete(':id')
   @Roles('admin')
   async deleteById(@Param('id') id: string) {
     return this.userService.deleteById(id);
   }
 
+<<<<<<< HEAD
+=======
+  @UseGuards(RolesGuard)
+>>>>>>> 575955a (backend v2.2)
   @Patch(':id')
   @Roles('admin')
   async update(

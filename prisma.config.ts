@@ -1,3 +1,4 @@
+<<<<<<< HEAD
  import { defineConfig } from 'prisma';
 
 import { Injectable, OnModuleInit } from "@nestjs/common";
@@ -30,5 +31,13 @@ export default defineConfig({
     db: {
       url: process.env.DATABASE_URL,
     },
+=======
+import { defineConfig } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  datasource: {
+    url: "postgresql://postgres:12345@localhost:5433/deepskyn?schema=public",
+>>>>>>> 575955a (backend v2.2)
   },
 });
