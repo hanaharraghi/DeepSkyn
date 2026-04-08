@@ -12,12 +12,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { GeminiService } from './gemini.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Controller('ai')
 export class GeminiController {
   constructor(
     private readonly geminiService: GeminiService,
     private readonly prisma: PrismaService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   @Post('analyze')
@@ -37,8 +39,6 @@ export class GeminiController {
       throw new BadRequestException('Uploaded file buffer is missing');
     }
 
-    console.log('req.user:', req.user);
-
     const keycloakId = req.user?.sub;
 
     if (!keycloakId) {
@@ -53,12 +53,27 @@ export class GeminiController {
       throw new BadRequestException('User not found in database');
     }
 
+    console.log('User found:', user.id);
+
+    // Analyze first so quota/rate-limit failures do not upload useless files
     const result = await this.geminiService.analyzeImage(
       file.buffer,
       file.mimetype,
     );
 
-    await this.prisma.analysis.create({
+    if (
+      !result ||
+      !result.skinType ||
+      result.healthScore === undefined ||
+      result.skinAge === undefined
+    ) {
+      throw new BadRequestException('Invalid AI analysis result');
+    }
+
+    const uploadedImage = await this.cloudinaryService.uploadFile(file);
+    console.log('Uploaded to Cloudinary:', uploadedImage.secure_url);
+
+    const savedAnalysis = await this.prisma.analysis.create({
       data: {
         userId: user.id,
         skinType: result.skinType,
@@ -68,13 +83,20 @@ export class GeminiController {
         concerns: result.concerns,
         morningRoutine: result.morningRoutine,
         eveningRoutine: result.eveningRoutine,
-        imageUrl: 'temporary-upload',
+        imageUrl: uploadedImage.secure_url,
       },
     });
 
-    console.log('Analysis saved for user:', user.id);
+    console.log('Analysis saved successfully:', savedAnalysis.id);
 
-    return result;
+    return {
+      success: true,
+      data: {
+        ...result,
+        imageUrl: uploadedImage.secure_url,
+        savedAnalysisId: savedAnalysis.id,
+      },
+    };
   }
 
   @Get('my-latest-analysis')
@@ -99,6 +121,16 @@ export class GeminiController {
       orderBy: { createdAt: 'desc' },
     });
 
-    return latestAnalysis;
+    if (!latestAnalysis) {
+      return {
+        message: 'No analysis found for this user',
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      data: latestAnalysis,
+    };
   }
 }

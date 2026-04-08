@@ -21,15 +21,6 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-<<<<<<< HEAD
-    "@nestjs/common": "^11.1.15",
-    "@nestjs/config": "^4.0.3",
-    "@nestjs/core": "^11.1.15",
-    "@nestjs/passport": "^11.0.5",
-    "@nestjs/platform-express": "^11.1.15",
-    "@prisma/adapter-pg": "^7.4.1",
-    "@prisma/client": "^5.14.0",
-=======
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.0.1",
@@ -37,7 +28,6 @@
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/adapter-pg": "^7.4.1",
     "@prisma/client": "^7.5.0",
->>>>>>> 575955a (backend v2.2)
     "axios": "^1.13.5",
     "buffer-to-stream": "^1.0.0",
     "cloudinary": "^2.9.0",
@@ -59,12 +49,8 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/multer": "^2.1.0",
-<<<<<<< HEAD
-    "@types/node": "^22.19.13",
-    "@types/streamifier": "^0.1.2",
-=======
     "@types/node": "^22.10.7",
->>>>>>> 575955a (backend v2.2)
+    "@types/streamifier": "^0.1.2",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -72,11 +58,7 @@
     "globals": "^16.0.0",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
-<<<<<<< HEAD
-    "prisma": "^5.14.0",
-=======
     "prisma": "^7.5.0",
->>>>>>> 575955a (backend v2.2)
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",

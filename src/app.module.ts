@@ -1,56 +1,49 @@
-// app.module.ts - Version corrigée
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './core/prisma/prisma.module';
 import { UserModule } from './user/user.module';
-import { AuthModule } from "./auth/auth.module";
+import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
-<<<<<<< HEAD
 import { SubscriptionModule } from './subscription/subscription.module';
-
-@Module({
-  imports: [
-    // ConfigModule DOIT être en premier
-    ConfigModule.forRoot({
-      isGlobal: true, // Rendre global pour éviter d'importer partout
-      envFilePath: '.env', // Spécifier le chemin du fichier .env
-=======
-import { GeminiService } from './core/ai/gemini.service';
-import { GeminiController } from './core/ai/gemini.controller';
 import { ProductsModule } from './core/products/products.module';
-import { ProductsController } from './core/products/products.controller';
-import { ProductsService } from './core/products/products.service';
 import { RemindersModule } from './core/reminders/reminders.module';
-import { RemindersController } from './core/reminders/reminders.controller';
-import { RemindersService } from './core/reminders/reminders.service';
+import { GeminiController } from './core/ai/gemini.controller';
+import { GeminiService } from './core/ai/gemini.service';
+import { CloudinaryModule } from './core/cloudinary/cloudinary.module';
+import { EducationController } from './education/education.controller';
+import { EducationService } from './education/education.service';
+import { scan } from 'rxjs';
+import { ScannerModule } from './core/scanner/scanner.module';
+import { AnalysesModule } from './analyses/analyses.module';
+import { ChatbotController } from './core/ai/chatbot.controller';
+import { ChatbotService } from './core/ai/chatbot.service (1)';
+import { OrdersModule } from './core/orders/orders.module';
+import { CartModule } from './core/cart/cart.module';
+
 
 @Module({
-  exports: [GeminiService], // Exporter pour pouvoir l'injecter dans d'autres modules si besoin
+  exports: [GeminiService],
   imports: [
-    // ConfigModule DOIT être en premier
     ConfigModule.forRoot({
-      isGlobal: true, // This makes ConfigService available everywhere
+      isGlobal: true,
       envFilePath: '.env',
->>>>>>> 575955a (backend v2.2)
     }),
-    PrismaModule, 
-    UserModule, 
+    PrismaModule,
+    UserModule,
     AuthModule,
     AdminModule,
-<<<<<<< HEAD
     SubscriptionModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
-=======
     RemindersModule,
-    ProductsModule
-
+    ProductsModule,
+    CloudinaryModule,
+    ScannerModule,
+     AnalysesModule,
+     OrdersModule,
+     CartModule
   ],
-  controllers: [AppController,GeminiController,ProductsController,RemindersController],
-  providers: [AppService,GeminiService,ProductsService,RemindersService],
->>>>>>> 575955a (backend v2.2)
+  controllers: [AppController,GeminiController,EducationController,ChatbotController],
+  providers: [AppService,GeminiService,EducationService,ChatbotService],
 })
 export class AppModule {}

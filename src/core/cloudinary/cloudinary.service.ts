@@ -1,27 +1,11 @@
-<<<<<<< HEAD
-import { Injectable } from '@nestjs/common';
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
-
-// Use require to avoid import/module errors with streamifier
-=======
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 
-// Using require to bypass streamifier type issues
->>>>>>> 575955a (backend v2.2)
 const streamifier = require('streamifier');
 
 @Injectable()
 export class CloudinaryService {
-<<<<<<< HEAD
-  
-  constructor() {
-    cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET,
-=======
   private readonly logger = new Logger(CloudinaryService.name);
 
   constructor(private configService: ConfigService) {
@@ -35,49 +19,35 @@ export class CloudinaryService {
       cloud_name: cloudName,
       api_key: apiKey,
       api_secret: apiSecret,
->>>>>>> 575955a (backend v2.2)
     });
   }
 
   async uploadFile(file: Express.Multer.File): Promise<UploadApiResponse> {
     return new Promise((resolve, reject) => {
-<<<<<<< HEAD
-      const upload = cloudinary.uploader.upload_stream(
-        // Optional: you can add a folder name here
-        { folder: 'deepskyn_analysis' }, 
-        (error, result) => {
-          if (error) return reject(error);
-          if (!result) return reject(new Error('Cloudinary upload result is undefined'));
-          resolve(result);
-        }
-      );
-
-      // This converts the file buffer into a stream that Cloudinary accepts
-=======
-      this.logger.log('Starting upload for: ' + file.originalname);
+      this.logger.log('Uploading image: ' + file.originalname);
 
       const upload = cloudinary.uploader.upload_stream(
-        { folder: 'deepskyn_analysis' },
+        {
+          folder: 'deepskyn_analysis', // THIS is the folder in Cloudinary
+        },
         (error, result) => {
           if (error) {
-            this.logger.error('Cloudinary Error: ' + error.message);
+            this.logger.error('Cloudinary error: ' + error.message);
             return reject(error);
           }
+
           if (!result) {
-            this.logger.error('Cloudinary returned no result');
-            return reject(new Error('Upload result is undefined'));
+            return reject(new Error('Upload failed'));
           }
 
-          this.logger.log('Upload Success! Public ID: ' + result.public_id);
+          this.logger.log('Upload Success!');
+          this.logger.log('Public ID: ' + result.public_id);
+          this.logger.log('Image URL: ' + result.secure_url);
+
           resolve(result);
         },
       );
 
-      if (!file.buffer) {
-        return reject(new Error('File buffer is empty'));
-      }
-
->>>>>>> 575955a (backend v2.2)
       streamifier.createReadStream(file.buffer).pipe(upload);
     });
   }

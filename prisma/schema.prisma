@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-  
-=======
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -20,6 +17,9 @@ model User {
   keycloakId String?    @unique
   email      String     @unique
   username   String?
+  phone           String?
+  birthday        DateTime?
+  address         String?
   createdAt  DateTime   @default(now())
   role       Role       @default(USER)
   points     Int        @default(0)
@@ -27,7 +27,10 @@ model User {
   analyses   Analysis[]
   reminders  Reminder[]
   subscriptionTier SubscriptionTier @default(FREE)
-
+  conversations Conversation[]
+  cart       Cart?
+  orders     Order[]
+  questionnaire SkinQuestionnaire?
 }
 
 enum Role {
@@ -85,4 +88,120 @@ enum SubscriptionTier {
   GOLD
   PLATINUM
 }
->>>>>>> 575955a (backend v2.2)
+
+model Article {
+  id        String   @id @default(uuid())
+  title     String
+  category  String   // ingredients, routines, concerns, seasonal
+  readTime  Int
+  rating    Float
+  image     String
+  summary   String   @db.Text
+  content   String[] // Array of paragraphs
+  createdAt DateTime @default(now())
+}
+
+model Video {
+  id        String   @id @default(uuid())
+  title     String
+  duration  String   // e.g., "08:24"
+  thumbnail String
+  category  String
+  url       String   // Link to the actual video
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Json     // Array of message objects with role and content
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  name      String
+  brand     String
+  price     String
+  image     String
+  url       String?
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     OrderItem[]
+  total     Float
+  status    OrderStatus @default(PENDING)
+  shipping  Float       @default(0)
+  tax       Float       @default(0)
+  trackingNumber String?
+  shippingAddress Json?  // {name, street, city, state, zip, phone}
+  billingAddress  Json?  // {name, street, city, state, zip}
+  paymentMethod   Json?  // {brand, last4, type}
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  name      String
+  brand     String
+  price     String
+  image     String
+  url       String?
+  quantity  Int
+  createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model SkinQuestionnaire {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  skinType         String
+  sensitivityLevel String
+
+  symptoms         String[]
+  affectedAreas    String[]
+  concerns         String[]
+  triggers         String[]
+
+  allergies        String?
+  medicalHistory   String?
+  duration         String
+  severity         String
+  skincareRoutine  String?
+
+  sunscreenUsage   String?
+  stressLevel      String?
+  sleepQuality     String?
+  waterIntake      String?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
