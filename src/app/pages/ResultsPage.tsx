@@ -86,7 +86,6 @@ function calculateAgeFromBirthday(birthday?: string): number | null {
   if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
     age--;
   }
-
   return age >= 0 ? age : null;
 }
 
@@ -115,7 +114,6 @@ function extractAnalysisFromStorage(raw: string | null): GeminiAnalysis | null {
       const nested = JSON.parse(parsed.analysis);
       if (isGeminiAnalysis(nested)) return nested;
     }
-
     if (isGeminiAnalysis(parsed?.result)) return parsed.result;
 
     if (typeof parsed?.result === "string") {
