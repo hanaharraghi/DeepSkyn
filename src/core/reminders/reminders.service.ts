@@ -31,7 +31,6 @@ export class RemindersService {
     if (!user) {
       throw new NotFoundException('User not found in database');
     }
-
     return user;
   }
 
@@ -119,6 +118,7 @@ export class RemindersService {
       ...updated,
       days: Array.isArray(updated.days) ? updated.days : [],
     };
+
   }
 
   async deleteReminder(keycloakId: string, reminderId: string) {
@@ -129,7 +129,7 @@ export class RemindersService {
     });
 
     if (!reminder) {
-      throw new NotFoundException('Reminder not found');
+      throw new NotFoundException('Reminder is not found');
     }
 
     if (reminder.userId !== user.id) {

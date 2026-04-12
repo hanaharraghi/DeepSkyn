@@ -19,9 +19,11 @@ export class RemindersController {
 
   @Get('me')
   async getMyReminders(@Req() req: any) {
-    const keycloakId = req.user?.sub;
-    return this.remindersService.getMyReminders(keycloakId);
-  }
+  const keycloakId = req.user?.sub;
+  const remindersPromise = this.remindersService.getMyReminders(keycloakId);
+  return remindersPromise;
+}
+
 
   @Post()
   async createReminder(@Req() req: any, @Body() body: any) {
