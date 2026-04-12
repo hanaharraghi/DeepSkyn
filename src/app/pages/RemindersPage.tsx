@@ -75,7 +75,7 @@ export default function RemindersPage() {
 
   const resetForm = () => {
     setFormReminder({
-      type: "morning",
+      type: "Morning",
       time: "08:00",
       title: "",
       description: "",
@@ -92,7 +92,7 @@ export default function RemindersPage() {
       const token = keycloak.token;
 
       if (!token) {
-        throw new Error("Authentication token is missing");
+        throw new Error("Authentication Token is missing");
       }
 
       const response = await fetch("http://localhost:3000/reminders/me", {
@@ -241,29 +241,30 @@ export default function RemindersPage() {
   };
 
   const openEditReminder = (reminder: Reminder) => {
-    setEditingReminderId(reminder.id);
-    setFormReminder({
+    const id = reminder.id;
+    const formData = {
       type: reminder.type,
       time: reminder.time,
       title: reminder.title,
       description: reminder.description,
       enabled: reminder.enabled,
       days: reminder.days,
-    });
-    setShowForm(true);
-  };
+    };
+    const show = true;
+    
+    setEditingReminderId(id);
+    setFormReminder(formData);
+    setShowForm(show);
+};
 
   const saveReminder = async () => {
     if (!formReminder.title || !formReminder.time) return;
-
     try {
       setSaving(true);
       setErrorMessage("");
       setSuccessMessage("");
-
       await refreshNow();
       const token = keycloak.token;
-
       if (!token) {
         throw new Error("Authentication token is missing");
       }
